@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://subhash1389.be21:G3ZDuvxOAL5h@ep-wispy-rice-a1641tb4-pooler.ap-southeast-1.aws.neon.tech/twitter?sslmode=require"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  firstname String
+  lastname String
+  email String @unique
+  password String
+  bio String
+  tweet Tweet[]
+  like Like[]
+  retweet Retweet[]
+  comment Comment[]
+
+}
+
+model Tweet{
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  createAt DateTime @default(now())
+  userid Int
+  likecount Int @default(0)
+  retweetcount Int @default(0)
+  user User @relation(fields: [userid],references: [id],onDelete: Cascade)
+  like Like[]
+  comment Comment[]
+  retweet Retweet[]
+
+}
+
+model Like{
+  id Int @id @default(autoincrement())
+  userid Int 
+  tweetid Int
+  tweet Tweet  @relation(fields: [tweetid],references: [id],onDelete: Cascade)
+  user User @relation(fields: [userid],references: [id],onDelete: Cascade)
+}
+
+model Comment{
+  id Int @id @default(autoincrement())
+  userid Int
+  tweetid Int
+  content String
+  tweet Tweet  @relation(fields: [tweetid],references: [id],onDelete: Cascade)
+  user User @relation(fields: [userid],references: [id],onDelete: Cascade)
+}
+
+model Retweet{
+  id Int @id @default(autoincrement())
+  tweetid Int
+  retweetby Int
+  user User @relation(fields: [retweetby],references: [id])
+  tweet Tweet @relation(fields: [tweetid],references: [id])
+}
