@@ -17,7 +17,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.set("view engine", "hbs");
 app.get("/", (req, res) => {
-    res.render("home");
+    res.send("home");
 });
 //routes
 app.use("/user", user_1.default);
